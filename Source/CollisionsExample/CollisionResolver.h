@@ -1,7 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// © 2025 CG Spectrum. All Rights Reserved.
 
 #pragma once
 
+// Includes
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "CollisionResolver.generated.h"
@@ -13,13 +14,12 @@ UENUM(BlueprintType)
 enum class ECollisionCheckType : uint8
 {
 	SphereToSphere UMETA(DisplayName = "Sphere to Sphere"),
+	BoxToSphere UMETA(DisplayName = "Box to Sphere"),
 	BoxToBoxAABB UMETA(DisplayName = "Box to Box (AABB)"),
-	BoxToBoxOBB UMETA(DisplayName = "Box to Box (OBB)"),
 	CapsuleToSphere UMETA(DisplayName = "Capsule to Sphere"),
 	CapsuleToCapsule UMETA(DisplayName = "Capsule to Capsule"),
-	BoxToSphere UMETA(DisplayName = "Box to Sphere"),
+	BoxToBoxOBB UMETA(DisplayName = "Box to Box (OBB)"),
 };
-
 
 UCLASS()
 class COLLISIONSEXAMPLE_API ACollisionResolver : public AActor

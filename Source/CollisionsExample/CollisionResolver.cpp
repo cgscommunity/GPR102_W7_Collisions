@@ -1,4 +1,9 @@
+// © 2025 CG Spectrum. All Rights Reserved.
+
+// This file's header
 #include "CollisionResolver.h"
+
+// Other includes
 #include "Components/TextRenderComponent.h"
 
 // Sets default values
@@ -68,6 +73,26 @@ void ACollisionResolver::CheckCollision()
 			DrawDebugLine(GetWorld(), LocationA, LocationB, FColor::White, false, -1.0f, 0, 1.0f);
 			break;
 		}
+		case ECollisionCheckType::BoxToSphere:
+		{
+			// Define AABB for the box
+			FVector BoxMin = LocationA - BoxExtentA;
+			FVector BoxMax = LocationA + BoxExtentA;
+
+			// Clamp the sphere center to the closest point inside the box bounds
+			FVector ClosestPoint = LocationB;
+			ClosestPoint.X = FMath::Clamp(LocationB.X, BoxMin.X, BoxMax.X);
+			ClosestPoint.Y = FMath::Clamp(LocationB.Y, BoxMin.Y, BoxMax.Y);
+			ClosestPoint.Z = FMath::Clamp(LocationB.Z, BoxMin.Z, BoxMax.Z);
+
+			// If the sphere center is inside or very close to the box, they're colliding
+			float DistSquared = FVector::DistSquared(ClosestPoint, LocationB);
+			bIsColliding = (DistSquared <= RadiusB * RadiusB);
+
+			DrawDebugBox(GetWorld(), LocationA, BoxExtentA, FQuat::Identity, FColor::Blue, false, -1.0f);
+			DrawDebugSphere(GetWorld(), LocationB, RadiusB, 12, FColor::Red, false, -1.0f);
+			break;
+		}
 		case ECollisionCheckType::BoxToBoxAABB:
 		{
 			// Calculate AABB min/max bounds for both boxes
@@ -85,20 +110,6 @@ void ACollisionResolver::CheckCollision()
 
 			DrawDebugBox(GetWorld(), LocationA, BoxExtentA, FQuat::Identity, FColor::Blue, false, -1.0f);
 			DrawDebugBox(GetWorld(), LocationB, BoxExtentB, FQuat::Identity, FColor::Red, false, -1.0f);
-			break;
-		}
-		case ECollisionCheckType::BoxToBoxOBB:
-		{
-			// Get box orientations as rotation quaternions
-			FQuat RotationA = ShapePositionA->GetComponentQuat();
-			FQuat RotationB = ShapePositionB->GetComponentQuat();
-
-			// Use Separating Axis Theorem (SAT) to test for overlap
-			bIsColliding = AreOBBsOverlapping(LocationA, BoxExtentA, RotationA,
-											  LocationB, BoxExtentB, RotationB);
-
-			DrawDebugBox(GetWorld(), LocationA, BoxExtentA, RotationA, FColor::Blue, false, -1.0f);
-			DrawDebugBox(GetWorld(), LocationB, BoxExtentB, RotationB, FColor::Red, false, -1.0f);
 			break;
 		}
 		case ECollisionCheckType::CapsuleToSphere:
@@ -142,24 +153,18 @@ void ACollisionResolver::CheckCollision()
 			DrawDebugCapsule(GetWorld(), LocationB + FVector::UpVector * HeightB * 0.5f, HeightB * 0.5f, RadiusB, FQuat::Identity, FColor::Red, false, -1.0f);
 			break;
 		}
-		case ECollisionCheckType::BoxToSphere:
+		case ECollisionCheckType::BoxToBoxOBB:
 		{
-			// Define AABB for the box
-			FVector BoxMin = LocationA - BoxExtentA;
-			FVector BoxMax = LocationA + BoxExtentA;
+			// Get box orientations as rotation quaternions
+			FQuat RotationA = ShapePositionA->GetComponentQuat();
+			FQuat RotationB = ShapePositionB->GetComponentQuat();
 
-			// Clamp the sphere center to the closest point inside the box bounds
-			FVector ClosestPoint = LocationB;
-			ClosestPoint.X = FMath::Clamp(LocationB.X, BoxMin.X, BoxMax.X);
-			ClosestPoint.Y = FMath::Clamp(LocationB.Y, BoxMin.Y, BoxMax.Y);
-			ClosestPoint.Z = FMath::Clamp(LocationB.Z, BoxMin.Z, BoxMax.Z);
+			// Use Separating Axis Theorem (SAT) to test for overlap
+			bIsColliding = AreOBBsOverlapping(LocationA, BoxExtentA, RotationA,
+											  LocationB, BoxExtentB, RotationB);
 
-			// If the sphere center is inside or very close to the box, they're colliding
-			float DistSquared = FVector::DistSquared(ClosestPoint, LocationB);
-			bIsColliding = (DistSquared <= RadiusB * RadiusB);
-
-			DrawDebugBox(GetWorld(), LocationA, BoxExtentA, FQuat::Identity, FColor::Blue, false, -1.0f);
-			DrawDebugSphere(GetWorld(), LocationB, RadiusB, 12, FColor::Red, false, -1.0f);
+			DrawDebugBox(GetWorld(), LocationA, BoxExtentA, RotationA, FColor::Blue, false, -1.0f);
+			DrawDebugBox(GetWorld(), LocationB, BoxExtentB, RotationB, FColor::Red, false, -1.0f);
 			break;
 		}
 	}
