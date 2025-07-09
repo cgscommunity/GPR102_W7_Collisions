@@ -13,11 +13,11 @@ UENUM(BlueprintType)
 enum class ECollisionCheckType : uint8
 {
 	SphereToSphere UMETA(DisplayName = "Sphere to Sphere"),
+	BoxToSphere UMETA(DisplayName = "Box to Sphere"),
 	BoxToBoxAABB UMETA(DisplayName = "Box to Box (AABB)"),
-	BoxToBoxOBB UMETA(DisplayName = "Box to Box (OBB)"),
 	CapsuleToSphere UMETA(DisplayName = "Capsule to Sphere"),
 	CapsuleToCapsule UMETA(DisplayName = "Capsule to Capsule"),
-	BoxToSphere UMETA(DisplayName = "Box to Sphere"),
+	BoxToBoxOBB UMETA(DisplayName = "Box to Box (OBB)"),
 };
 
 
