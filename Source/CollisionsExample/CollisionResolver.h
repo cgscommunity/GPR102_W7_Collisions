@@ -1,7 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// © 2025 CG Spectrum. All Rights Reserved.
 
 #pragma once
 
+// Includes
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "CollisionResolver.generated.h"

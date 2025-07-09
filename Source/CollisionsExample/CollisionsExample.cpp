@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// © 2025 CG Spectrum. All Rights Reserved.
 
 #include "CollisionsExample.h"
 #include "Modules/ModuleManager.h"

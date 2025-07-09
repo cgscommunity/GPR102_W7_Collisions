@@ -1,4 +1,9 @@
+// © 2025 CG Spectrum. All Rights Reserved.
+
+// This file's header
 #include "CollisionResolver.h"
+
+// Other includes
 #include "Components/TextRenderComponent.h"
 
 // Sets default values
@@ -31,7 +36,7 @@ void ACollisionResolver::BeginPlay()
 void ACollisionResolver::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 	CheckCollision();
 
 	// Update visual feedback depending on whether shapes are colliding
